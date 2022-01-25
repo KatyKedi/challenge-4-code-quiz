@@ -3,6 +3,7 @@ var pageContentEl = document.querySelector("#page-content");
 var promptEl = document.querySelector(".prompt");
 var timer = document.querySelector(".timer");
 
+
 //set timer start
 var timerInt = 120;
 
@@ -12,6 +13,8 @@ var promptContents = {
     "This is question 2": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"]
 };
 
+var correctAnswers = ["This is answer 1", "This is answer 3"];
+
 var submitButtonHandler = function(event) {
     event.preventDefault();
     //get target element from event
@@ -19,18 +22,16 @@ var submitButtonHandler = function(event) {
 
     //if submit button was clicked, reset the page and start the clock
     if (targetEl.matches("#start-quiz")) {
-        resetPage();
+        resetPage(promptEl);
         startTimer();
-        loadNextQuestion();
-    }
-    else if (targetEl.matches(".btn")) {
-        resetPage();
+        loadNextQuestion(newPromptEl);
     }
 };
 
-var resetPage = function() {
-    //remove the element with class of prompt
-    promptEl.remove();
+var resetPage = function(page) {
+    //remove the element with name of prompt
+    page.remove();
+    return newPromptEl = document.createElement("div");
 };
 
 var startTimer = function() {
@@ -54,30 +55,49 @@ var startTimer = function() {
     var timerInterval = setInterval(decrementTimer, 1000);
 };
 
-var loadNextQuestion = function() {
-    //create a div to wrap the whole prompt
-    var promptEl = document.createElement("div");
-    promptEl.className = "prompt";
+var loadNextQuestion = function(page) {
 
     //create an h2 to hold the question
     var questionEl = document.createElement("h2");
     questionEl.textContent = Object.keys(promptContents)[0];
 
     //append new elements to the page
-    pageContentEl.appendChild(promptEl);
-    promptEl.appendChild(questionEl);
+    pageContentEl.appendChild(page);
+    page.appendChild(questionEl);
 
     //create a button for each answer
     for (i = 0; i < Object.values(promptContents)[0].length; i++) {
-    
+        //create the element
         var submitAnswerEl = document.createElement("button");
-        submitAnswerEl.textContent = Object.values(promptContents)[0][i];
-        submitAnswerEl.setAttribute("type", "click");
-        promptEl.appendChild(submitAnswerEl);
-    }
 
-    
+        //add answer text and attribute
+        submitAnswerEl.textContent = Object.values(promptContents)[0][i];
+        submitAnswerEl.className = "answer-button";
+        submitAnswerEl.setAttribute("type", "click");
+
+        //append new element to the page
+        page.appendChild(submitAnswerEl);
+    }
 };
 
-//listen for the start button click
+var checkAnswer = function(event) {
+    event.preventDefault();
+    var targetEl = event.target;
+    if (targetEl.matches(".answer-button")) {
+        resetPage(newPromptEl);
+        loadNextQuestion(newPromptEl);
+        var result = document.createElement("p");
+        if (correctAnswers[0] == targetEl.textContent) {
+            result.textContent = "Correct!";
+        }
+        else {
+            result.textContent = "Wrong!";
+        }
+        newPromptEl.appendChild(result);
+    }
+};   
+
+
+//listen for button clicks
 pageContentEl.addEventListener("click", submitButtonHandler);
+pageContentEl.addEventListener("click", checkAnswer);
