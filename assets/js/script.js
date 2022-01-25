@@ -1,7 +1,16 @@
+//select elements in DOM
 var pageContentEl = document.querySelector("#page-content");
 var promptEl = document.querySelector(".prompt");
 var timer = document.querySelector(".timer");
+
+//set timer start
 var timerInt = 120;
+
+//questions and answers together in object
+var promptContents = {
+    "This is question 1": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"],
+    "This is question 2": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"]
+};
 
 var submitButtonHandler = function(event) {
     event.preventDefault();
@@ -46,16 +55,28 @@ var startTimer = function() {
 };
 
 var loadNextQuestion = function() {
+    //create a div to wrap the whole prompt
     var promptEl = document.createElement("div");
     promptEl.className = "prompt";
+
+    //create an h2 to hold the question
     var questionEl = document.createElement("h2");
-    questionEl.textContent = "This is a question?";
-    var submitAnswerEl = document.createElement("button");
-    submitAnswerEl.textContent = "This is an answer.";
-    submitAnswerEl.setAttribute("type", "click");
+    questionEl.textContent = Object.keys(promptContents)[0];
+
+    //append new elements to the page
     pageContentEl.appendChild(promptEl);
     promptEl.appendChild(questionEl);
-    promptEl.appendChild(submitAnswerEl);
+
+    //create a button for each answer
+    for (i = 0; i < Object.values(promptContents)[0].length; i++) {
+    
+        var submitAnswerEl = document.createElement("button");
+        submitAnswerEl.textContent = Object.values(promptContents)[0][i];
+        submitAnswerEl.setAttribute("type", "click");
+        promptEl.appendChild(submitAnswerEl);
+    }
+
+    
 };
 
 //listen for the start button click
