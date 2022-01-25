@@ -3,19 +3,22 @@ var pageContentEl = document.querySelector("#page-content");
 var promptEl = document.querySelector(".prompt");
 var timer = document.querySelector(".timer");
 
-
+//set question number
+var questionNumber = 0;
 //set timer start
 var timerInt = 120;
 
 //questions and answers together in object
 var promptContents = {
     "This is question 1": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"],
-    "This is question 2": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"]
+    "This is question 2": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"],
+    "This is question 3": ["This is answer 1", "This is answer 2"]
 };
 
-var correctAnswers = ["This is answer 1", "This is answer 3"];
+//array of correct answers
+var correctAnswers = ["This is answer 1", "This is answer 3", "This is answer 2"];
 
-var submitButtonHandler = function(event) {
+var startButtonHandler = function(event) {
     event.preventDefault();
     //get target element from event
     var targetEl = event.target;
@@ -24,7 +27,7 @@ var submitButtonHandler = function(event) {
     if (targetEl.matches("#start-quiz")) {
         resetPage(promptEl);
         startTimer();
-        loadNextQuestion(newPromptEl);
+        loadNextQuestion(newPromptEl, questionNumber);
     }
 };
 
@@ -55,49 +58,49 @@ var startTimer = function() {
     var timerInterval = setInterval(decrementTimer, 1000);
 };
 
-var loadNextQuestion = function(page) {
-
+var loadNextQuestion = function(page, number) {
     //create an h2 to hold the question
     var questionEl = document.createElement("h2");
-    questionEl.textContent = Object.keys(promptContents)[0];
+    questionEl.textContent = Object.keys(promptContents)[number];
 
     //append new elements to the page
     pageContentEl.appendChild(page);
     page.appendChild(questionEl);
 
     //create a button for each answer
-    for (i = 0; i < Object.values(promptContents)[0].length; i++) {
+    for (i = 0; i < Object.values(promptContents)[number].length; i++) {
         //create the element
         var submitAnswerEl = document.createElement("button");
 
         //add answer text and attribute
-        submitAnswerEl.textContent = Object.values(promptContents)[0][i];
+        submitAnswerEl.textContent = Object.values(promptContents)[number][i];
         submitAnswerEl.className = "answer-button";
+        submitAnswerEl.setAttribute("id", i);
         submitAnswerEl.setAttribute("type", "click");
 
         //append new element to the page
         page.appendChild(submitAnswerEl);
     }
+    questionNumber++;
 };
 
 var checkAnswer = function(event) {
     event.preventDefault();
     var targetEl = event.target;
     if (targetEl.matches(".answer-button")) {
-        resetPage(newPromptEl);
-        loadNextQuestion(newPromptEl);
         var result = document.createElement("p");
-        if (correctAnswers[0] == targetEl.textContent) {
+        if (correctAnswers[questionNumber-1] === targetEl.textContent) {
             result.textContent = "Correct!";
         }
         else {
-            result.textContent = "Wrong!";
+            result.textContent = "Wrong!";                
         }
+        resetPage(newPromptEl);
+        loadNextQuestion(newPromptEl, questionNumber);   
         newPromptEl.appendChild(result);
     }
 };   
 
-
 //listen for button clicks
-pageContentEl.addEventListener("click", submitButtonHandler);
+pageContentEl.addEventListener("click", startButtonHandler);
 pageContentEl.addEventListener("click", checkAnswer);
