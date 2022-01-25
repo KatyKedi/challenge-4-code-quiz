@@ -8,15 +8,52 @@ var questionNumber = 0;
 //set timer start
 var timerInt = 120;
 
-//questions and answers together in object
+//questions and corresponding answers together in object
 var promptContents = {
-    "This is question 1": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"],
-    "This is question 2": ["This is answer 1", "This is answer 2", "This is answer 3", "This is answer 4"],
-    "This is question 3": ["This is answer 1", "This is answer 2"]
+    "Which is not the correct word for one of the initials in rgba()?": 
+    ["red", "green", "black", "alpha"],
+
+    "What does MVP stand for in programming?": 
+    ["minimal value produced", "minimal viable product", "most versatile program", "most valuable person"],
+
+    "How do you write comments in CSS? (works for long JavaScript comments as well)": 
+    ["//comment", "*comment*", "<!--Comment-->", "/*comment*/"],
+
+    "Which syntax allows us to check if two values are equal in type and value?": 
+    ["value1 != value2", "value1 = value2", "value1 == value2", "value1 === value2"],
+
+    "Pick the answer that is not a falsy value.": 
+    ["0.5", "''(empty string)", "undefined", "null"],
+
+    "Pick the answer that is not a primitive data type.": 
+    ["array", "boolean", "string", "symbol"],
+
+    "Which is an example of a short circuit conditional statement?": 
+    ["variable1 += variable2", "variable1 -= variable2", "variable = variable || 0", "variable = variable && 0"],
+
+    "What can be used with a <select> element to create a dropdown list?": 
+    ["<option> elements", "name attribute", "value attribute", "all of the above"],
+
+    "How do you update or add any attribute on an HTML element?": 
+    ["hasAttribute()", "setAttribute()", "getAttribute()", "removeAttribute()"],
+
+    "What does JSON stand for?": 
+    ["JavaScript Only Network", "JavaScript Object Notation", "JavaScript Optional Nodes", "JavaScript Overhaul News"]
 };
 
 //array of correct answers
-var correctAnswers = ["This is answer 1", "This is answer 3", "This is answer 2"];
+var correctAnswers = [
+    "black", 
+    "minimal viable product", 
+    "/*comment*/", 
+    "value1 === value2", 
+    "0.5", 
+    "array", 
+    "variable = variable || 0", 
+    "all of the above", 
+    "setAttribute()", 
+    "JavaScript Object Notation"
+];
 
 var startButtonHandler = function(event) {
     event.preventDefault();
@@ -72,7 +109,7 @@ var loadNextQuestion = function(page, number) {
         //create the element
         var submitAnswerEl = document.createElement("button");
 
-        //add answer text and attribute
+        //add answer text and attributes
         submitAnswerEl.textContent = Object.values(promptContents)[number][i];
         submitAnswerEl.className = "answer-button";
         submitAnswerEl.setAttribute("id", i);
