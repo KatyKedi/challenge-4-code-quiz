@@ -118,25 +118,75 @@ var loadNextQuestion = function(page, number) {
         //append new element to the page
         page.appendChild(submitAnswerEl);
     }
+    //increase question number counter after each new load
     questionNumber++;
 };
 
 var checkAnswer = function(event) {
     event.preventDefault();
+    //target the clicked element
     var targetEl = event.target;
+
+    //if an answer button is clicked
     if (targetEl.matches(".answer-button")) {
+        //create an element to display correct or wrong result
         var result = document.createElement("p");
+
+        //if the correct answer matches the clicked button's text, display correct
         if (correctAnswers[questionNumber-1] === targetEl.textContent) {
             result.textContent = "Correct!";
         }
+        //otherwise, display wrong
         else {
             result.textContent = "Wrong!";                
         }
+        //reset the page and load the next question, displaying correct or wrong from previous selection
         resetPage(newPromptEl);
-        loadNextQuestion(newPromptEl, questionNumber);   
-        newPromptEl.appendChild(result);
+        if (questionNumber < correctAnswers.length) {
+            loadNextQuestion(newPromptEl, questionNumber);   
+            newPromptEl.appendChild(result);
+        }
+        else {
+            finishScreen();
+        }
     }
 };   
+
+var finishScreen = function() {
+    //create a <div> element to hold the finish screen content
+    var finishEl = document.createElement("div");
+
+    //create an <h1> element that reads All Done!
+    var allDoneEl = document.createElement("h1");
+    allDoneEl.textContent = "All Done!";
+
+    //create a <p> element that displays the final score
+    var finalScoreEl = document.createElement("p");
+    finalScoreEl.textContent = "Your final score is awesome."
+
+    //create a <form> element that allows users to input their initials
+    var formEl = document.createElement("form");
+    var formPromptEl = document.createElement("p");
+    formPromptEl.textContent = "Enter initials: ";
+    var formInputEl = document.createElement("input");
+    formInputEl.type = "text";
+    var formButtonEl = document.createElement("button");
+    formButtonEl.type = "submit";
+    formButtonEl.textContent = "Submit";
+
+    //append finishEl to pageContentEl
+    pageContentEl.appendChild(finishEl);
+
+    //append children to <div> element
+    finishEl.appendChild(allDoneEl);
+    finishEl.appendChild(finalScoreEl);
+    finishEl.appendChild(formEl);
+
+    //append children to <form> element
+    formEl.appendChild(formPromptEl);
+    formEl.appendChild(formInputEl);
+    formEl.appendChild(formButtonEl);
+};
 
 //listen for button clicks
 pageContentEl.addEventListener("click", startButtonHandler);
