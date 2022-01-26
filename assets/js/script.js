@@ -7,6 +7,8 @@ var timer = document.querySelector(".timer");
 var questionNumber = 0;
 //set timer start
 var timerInt = 120;
+//set starting score at 0
+var score = 0;
 
 //questions and corresponding answers together in object
 var promptContents = {
@@ -132,9 +134,10 @@ var checkAnswer = function(event) {
         //create an element to display correct or wrong result
         var result = document.createElement("p");
 
-        //if the correct answer matches the clicked button's text, display correct
+        //if the correct answer matches the clicked button's text, display correct and add to score
         if (correctAnswers[questionNumber-1] === targetEl.textContent) {
             result.textContent = "Correct!";
+            score += 10;
         }
         //otherwise, display wrong
         else {
@@ -162,7 +165,7 @@ var finishScreen = function() {
 
     //create a <p> element that displays the final score
     var finalScoreEl = document.createElement("p");
-    finalScoreEl.textContent = "Your final score is awesome."
+    finalScoreEl.textContent = "Your final score is " + score + ".";
 
     //create a <form> element that allows users to input their initials
     var formEl = document.createElement("form");
