@@ -96,6 +96,7 @@ var startTimer = function() {
         }
         //if the timer gets down to 0, clear the interval
         else {
+            timerEnds();
             clearInterval(timerInterval);
         }
     };
@@ -146,9 +147,10 @@ var checkAnswer = function(event) {
             result.textContent = "Correct!";
             score += 10;
         }
-        //otherwise, display wrong
+        //otherwise, display wrong and penalize timer
         else {
-            result.textContent = "Wrong!";                
+            result.textContent = "Wrong!";  
+            timerInt -= 10;              
         }
         if (questionNumber < correctAnswers.length) {
             //reset the page and load the next question, displaying correct or wrong from previous selection
@@ -157,11 +159,20 @@ var checkAnswer = function(event) {
             newPromptEl.appendChild(result);
         }
         else {
+            //end the clock and bring to finish screen
+            timerInt = 0;
             resetPage(newPromptEl);
             finishScreen();
         }
     }
-};   
+};  
+
+timerEnds = function() {
+    if (timerInt === 0) {
+        resetPage(newPromptEl);
+        finishScreen();
+    }
+}
 
 var finishScreen = function() {
     //create an <h1> element that reads All Done!
