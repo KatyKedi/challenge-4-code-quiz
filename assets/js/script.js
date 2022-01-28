@@ -6,6 +6,10 @@ var timer = document.querySelector(".timer");
 //create a form element for the finish screen
 var formEl = document.createElement("form");
 
+var names = [];
+var scores = [];
+var allScores = [names, scores];
+
 //set question number
 var questionNumber = 0;
 //set timer start
@@ -199,9 +203,31 @@ var submitScore = function(event) {
     if (targetEl.matches(".submit-score-button")) {
         //get the initials and save them with score
         var initials =  document.querySelector("input").value;
-        localStorage.setItem("score", initials + " - " + score);
+        names.push(initials);
+        scores.push(score);
+        saveScores();
         resetPage(newPromptEl);
         highScoresPage();
+    }
+};
+
+var saveScores = function() {
+    //reset the scores array
+    localStorage.setItem("scores", JSON.stringify(allScores));
+};
+
+var loadScores = function() {
+    //retrieve the string version of scores array
+    var savedScores = localStorage.getItem("scores");
+    if (!savedScores) {
+        return false;
+    }
+    //change the string back into an object
+    savedScores = JSON.parse(savedScores);
+    //for every set of scores in the array, push the info to names and scores
+    for (i = 0; i < savedScores[0].length; i++) {
+        names.push(savedScores[0][i]);
+        scores.push(savedScores[1][i]);
     }
 };
 
@@ -211,8 +237,12 @@ var highScoresPage = function() {
     highScoreEl.textContent = "High Scores";
     //set up the list of scores
     var scoreListEl = document.createElement("ul");
-    var scoreItemEl = document.createElement("li");
-    scoreItemEl.textContent = localStorage.getItem("score");
+
+    for (i=0; i < names.length; i++) {
+        var scoreItemEl = document.createElement("li");
+        scoreItemEl.textContent = names[i] + " - " + scores[i];
+        scoreListEl.appendChild(scoreItemEl);
+    }
     //create a go back button
     var goBackButtonEl = document.createElement("button");
     goBackButtonEl.type = "click";
@@ -227,7 +257,6 @@ var highScoresPage = function() {
     //append elements to the main page
     pageContentEl.appendChild(highScoreEl);
     pageContentEl.appendChild(scoreListEl);
-    scoreListEl.appendChild(scoreItemEl);
     pageContentEl.appendChild(goBackButtonEl);
     pageContentEl.appendChild(clearHighScoresButtonEl);
 };
@@ -236,3 +265,5 @@ var highScoresPage = function() {
 pageContentEl.addEventListener("click", startButtonHandler);
 pageContentEl.addEventListener("click", checkAnswer);
 formEl.addEventListener("click", submitScore);
+
+loadScores();
