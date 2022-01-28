@@ -231,12 +231,13 @@ var loadScores = function() {
     }
 };
 
+var scoreListEl = document.createElement("ul");
+
 var highScoresPage = function() {
     //set up the high scores screen
     var highScoreEl = document.createElement("h1");
     highScoreEl.textContent = "High Scores";
     //set up the list of scores
-    var scoreListEl = document.createElement("ul");
 
     for (i=0; i < names.length; i++) {
         var scoreItemEl = document.createElement("li");
@@ -261,9 +262,27 @@ var highScoresPage = function() {
     pageContentEl.appendChild(clearHighScoresButtonEl);
 };
 
+var clearHighScores = function(event) {
+    targetEl = event.target;
+    if (targetEl.matches(".clear")) {
+        localStorage.clear();
+        scoreListEl.remove();
+    }
+};
+
+var goBack = function(event) {
+    event.preventDefault();
+    targetEl = event.target;
+    if (targetEl.matches(".go-back")) {
+        window.location.reload();
+    }
+};
+
 //listen for button clicks
 pageContentEl.addEventListener("click", startButtonHandler);
 pageContentEl.addEventListener("click", checkAnswer);
 formEl.addEventListener("click", submitScore);
+pageContentEl.addEventListener("click", clearHighScores);
+pageContentEl.addEventListener("click", goBack)
 
 loadScores();
