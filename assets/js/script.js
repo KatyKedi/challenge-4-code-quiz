@@ -1,6 +1,8 @@
 //select elements in DOM
+var pageHeaderEl = document.querySelector(".header")
 var pageContentEl = document.querySelector("#page-content");
 var promptEl = document.querySelector(".prompt");
+var viewHighScoresEl = document.querySelector(".view-high-scores");
 var timer = document.querySelector(".timer");
 
 //create a form element for the finish screen
@@ -219,6 +221,7 @@ var submitScore = function(event) {
         //get the initials and save them with score
         var initials =  document.querySelector("input").value;
             if (initials.length < 4 && !initials.match(/\d+/g) && initials != "") {
+                initials = initials.toUpperCase();
                 names.push(initials);
                 scores.push(score);
                 saveScores();
@@ -251,7 +254,17 @@ var loadScores = function() {
     }
 };
 
-var scoreListEl = document.createElement("ul");
+var viewHighScores = function(event) {
+    var targetEl = event.target;
+    if (targetEl.matches(".view-high-scores")) {
+        timerInt = 0;
+        resetPage(promptEl);
+        resetPage(newPromptEl);
+        highScoresPage();
+    }
+};
+
+var scoreListEl = document.createElement("ol");
 
 var highScoresPage = function() {
     //set up the high scores screen
@@ -299,6 +312,7 @@ var goBack = function(event) {
 };
 
 //listen for button clicks
+pageHeaderEl.addEventListener("click", viewHighScores);
 pageContentEl.addEventListener("click", startButtonHandler);
 pageContentEl.addEventListener("click", checkAnswer);
 formEl.addEventListener("click", submitScore);
