@@ -96,7 +96,6 @@ var startTimer = function() {
         }
         //if the timer gets down to 0, clear the interval
         else {
-            timerEnds();
             clearInterval(timerInterval);
         }
     };
@@ -159,10 +158,15 @@ var checkAnswer = function(event) {
             newPromptEl.appendChild(result);
         }
         else {
-            //end the clock and bring to finish screen
-            timerInt = 0;
-            resetPage(newPromptEl);
-            finishScreen();
+            if (timerInt !== 0) {
+                //end the clock and bring to finish screen
+                timerInt = 0;
+                resetPage(newPromptEl);
+                finishScreen();
+            }
+            else {
+                timerEnds();
+            }
         }
     }
 };  
@@ -214,11 +218,16 @@ var submitScore = function(event) {
     if (targetEl.matches(".submit-score-button")) {
         //get the initials and save them with score
         var initials =  document.querySelector("input").value;
-        names.push(initials);
-        scores.push(score);
-        saveScores();
-        resetPage(newPromptEl);
-        highScoresPage();
+            if (initials.length < 4 && !initials.match(/\d+/g) && initials != "") {
+                names.push(initials);
+                scores.push(score);
+                saveScores();
+                resetPage(newPromptEl);
+                highScoresPage();
+            } else {
+                alert("You need to enter valid initials!");
+            }
+        
     }
 };
 
