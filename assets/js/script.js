@@ -5,9 +5,6 @@ var promptEl = document.querySelector(".prompt");
 var viewHighScoresEl = document.querySelector(".view-high-scores");
 var timer = document.querySelector(".timer");
 
-//create a form element for the finish screen
-var formEl = document.createElement("form");
-
 var names = [];
 var scores = [];
 var allScores = [names, scores];
@@ -74,6 +71,7 @@ var startButtonHandler = function(event) {
     //if start button was clicked, reset the page and start the clock
     if (targetEl.matches("#start-quiz")) {
         resetPage(promptEl);
+        newPromptEl.classList = "prompt questions";
         startTimer();
         loadNextQuestion(newPromptEl, questionNumber);
     }
@@ -109,6 +107,7 @@ var startTimer = function() {
 var loadNextQuestion = function(page, number) {
     //create an h2 to hold the question
     var questionEl = document.createElement("h2");
+    questionEl.className = "question";
     questionEl.textContent = Object.keys(promptContents)[number];
 
     //append new elements to the page
@@ -121,8 +120,8 @@ var loadNextQuestion = function(page, number) {
         var submitAnswerEl = document.createElement("button");
 
         //add answer text and attributes
-        submitAnswerEl.textContent = Object.values(promptContents)[number][i];
-        submitAnswerEl.className = "answer-button";
+        submitAnswerEl.textContent = (i+1) + ". " + Object.values(promptContents)[number][i];
+        submitAnswerEl.className = "btn answer-button";
         submitAnswerEl.setAttribute("id", i);
         submitAnswerEl.setAttribute("type", "click");
 
@@ -142,9 +141,10 @@ var checkAnswer = function(event) {
     if (targetEl.matches(".answer-button")) {
         //create an element to display correct or wrong result
         var result = document.createElement("p");
+        result.className = "result";
 
         //if the correct answer matches the clicked button's text, display correct and add to score
-        if (correctAnswers[questionNumber-1] === targetEl.textContent) {
+        if (correctAnswers[questionNumber-1] === targetEl.textContent.split(". ")[1]) {
             result.textContent = "Correct!";
             score += 10;
         }
@@ -156,6 +156,7 @@ var checkAnswer = function(event) {
         if (questionNumber < correctAnswers.length) {
             //reset the page and load the next question, displaying correct or wrong from previous selection
             resetPage(newPromptEl);
+            newPromptEl.classList = "prompt questions";
             loadNextQuestion(newPromptEl, questionNumber);   
             newPromptEl.appendChild(result);
         }
@@ -164,6 +165,7 @@ var checkAnswer = function(event) {
                 //end the clock and bring to finish screen
                 timerInt = 0;
                 resetPage(newPromptEl);
+                newPromptEl.className = "prompt";
                 finishScreen();
             }
             else {
@@ -176,28 +178,32 @@ var checkAnswer = function(event) {
 timerEnds = function() {
     if (timerInt === 0) {
         resetPage(newPromptEl);
+        newPromptEl.className = "prompt";
         finishScreen();
     }
 }
 
+//create a form element for the finish screen
+var formEl = document.createElement("form");
+
 var finishScreen = function() {
-    //create an <h1> element that reads All Done!
-    var allDoneEl = document.createElement("h1");
+    formEl.className = "form";
+    formEl.textContent = "Enter initials: "
+
+    //create an <h2> element that reads All Done!
+    var allDoneEl = document.createElement("h2");
     allDoneEl.textContent = "All Done!";
 
     //create a <p> element that displays the final score
     var finalScoreEl = document.createElement("p");
     finalScoreEl.textContent = "Your final score is " + score + ".";
 
-    var formPromptEl = document.createElement("p");
-    formPromptEl.textContent = "Enter initials: ";
-
     //create elements that allows users to input and submit their initials
     var formInputEl = document.createElement("input");
     formInputEl.setAttribute("type","text");
     var formButtonEl = document.createElement("button");
     formButtonEl.setAttribute("type","click");
-    formButtonEl.className = "submit-score-button";
+    formButtonEl.classList= "btn submit-score-button";
     formButtonEl.textContent = "Submit";
 
     //append children to <form> element
@@ -207,9 +213,8 @@ var finishScreen = function() {
     //append children to <div> element
     newPromptEl.appendChild(allDoneEl);
     newPromptEl.appendChild(finalScoreEl);
-    newPromptEl.appendChild(formPromptEl);
     newPromptEl.appendChild(formEl);
-
+    newPromptEl.classList = "prompt final-screen";
     //append finishEl to pageContentEl
     pageContentEl.appendChild(newPromptEl);
 };
@@ -226,6 +231,7 @@ var submitScore = function(event) {
                 scores.push(score);
                 saveScores();
                 resetPage(newPromptEl);
+                newPromptEl.classList = "prompt high-scores";
                 highScoresPage();
             } else {
                 alert("You need to enter valid initials!");
@@ -260,11 +266,13 @@ var viewHighScores = function(event) {
         timerInt = 0;
         resetPage(promptEl);
         resetPage(newPromptEl);
+        newPromptEl.classList = "prompt high-scores";
         highScoresPage();
     }
 };
 
 var scoreListEl = document.createElement("ol");
+scoreListEl.className = "scores";
 
 var highScoresPage = function() {
     //set up the high scores screen
@@ -277,27 +285,33 @@ var highScoresPage = function() {
         scoreItemEl.textContent = names[i] + " - " + scores[i];
         scoreListEl.appendChild(scoreItemEl);
     }
+    var buttonsEl = document.createElement("div");
+    buttonsEl.className = "end-buttons";
     //create a go back button
     var goBackButtonEl = document.createElement("button");
     goBackButtonEl.type = "click";
-    goBackButtonEl.className = "go-back";
+    goBackButtonEl.className = "btn go-back";
     goBackButtonEl.textContent = "Go Back";
     //create a clear high scores button
     var clearHighScoresButtonEl = document.createElement("button");
     clearHighScoresButtonEl.type = "click";
-    clearHighScoresButtonEl.className = "clear";
+    clearHighScoresButtonEl.className = "btn clear";
     clearHighScoresButtonEl.textContent = "Clear High Scores";
 
     //append elements to the main page
-    pageContentEl.appendChild(highScoreEl);
-    pageContentEl.appendChild(scoreListEl);
-    pageContentEl.appendChild(goBackButtonEl);
-    pageContentEl.appendChild(clearHighScoresButtonEl);
+    newPromptEl.appendChild(highScoreEl);
+    newPromptEl.appendChild(scoreListEl);
+    buttonsEl.appendChild(goBackButtonEl);
+    buttonsEl.appendChild(clearHighScoresButtonEl);
+    newPromptEl.appendChild(buttonsEl);
+
+    pageContentEl.appendChild(newPromptEl);
 };
 
 var clearHighScores = function(event) {
     targetEl = event.target;
     if (targetEl.matches(".clear")) {
+        //clear everythin gin local storage
         localStorage.clear();
         scoreListEl.remove();
     }
@@ -307,6 +321,7 @@ var goBack = function(event) {
     event.preventDefault();
     targetEl = event.target;
     if (targetEl.matches(".go-back")) {
+        //reload back to the homepage
         window.location.reload();
     }
 };
