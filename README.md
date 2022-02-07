@@ -8,7 +8,7 @@ This application allow the user to take a multiple choice quiz on introductory c
 - Ten seconds time is deducted for each incorrect answer.
 
 ## The application homepage resembles the following:
-https://github.com/KatyKedi/challenge-4-code-quiz/blob/main/assets/images/code-quiz.png
+https://github.com/KatyKedi/challenge-4-code-quiz/blob/main/assets/images/code-quiz.png?raw=true
 
 ## Link to deployed application:
 https://katykedi.github.io/challenge-4-code-quiz/
