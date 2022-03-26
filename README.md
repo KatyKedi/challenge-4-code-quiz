@@ -1,4 +1,4 @@
-# Challenge 4: Code Quiz
+# Code Quiz
 
 This application allow the user to take a multiple choice quiz on introductory coding concepts. The user's score is recorded, and they are given the option to save their score to the high scores list to compare with others.
 
@@ -8,7 +8,7 @@ This application allow the user to take a multiple choice quiz on introductory c
 - Ten seconds time is deducted for each incorrect answer.
 
 ## The application homepage resembles the following:
-![alt text](https://github.com/KatyKedi/challenge-4-code-quiz/blob/main/assets/images/code-quiz.png?raw=true)
+![alt text](https://github.com/KatyKedi/code-quiz/blob/main/assets/images/code-quiz.png?raw=true)
 
 ## Link to deployed application:
-https://katykedi.github.io/challenge-4-code-quiz/
+https://katykedi.github.io/code-quiz/
